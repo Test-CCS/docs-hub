@@ -1,0 +1,62 @@
+name: Sync Docs and Deploy
+
+on:
+  # Ejecutar cada 2 horas
+  schedule:
+    - cron: '0 */2 * * *'
+
+  # Permitir ejecución manual desde la UI
+  workflow_dispatch:
+
+  # Rebuild inmediato si cambia la configuración de equipos
+  push:
+    branches: [main]
+    paths:
+      - 'config/teams.yml'
+      - 'scripts/**'
+      - 'requirements.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs-hub
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Sync docs from team repos
+        run: python scripts/sync_docs.py
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - name: Generate mkdocs.yml navigation
+        run: python scripts/generate_mkdocs_nav.py
+
+      - name: Build MkDocs site
+        run: mkdocs build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          force_orphan: true

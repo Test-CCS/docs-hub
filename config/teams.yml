@@ -1,0 +1,43 @@
+# Configuración de equipos y repositorios
+# Esta es la fuente de verdad: define qué repos pertenecen a cada equipo
+# El workflow sincroniza la documentación de estos repos automáticamente
+
+organization: "mi-org"  # Reemplazar con el nombre de la cuenta u org en GitHub
+
+teams:
+  - name: "Equipo Alpha"
+    slug: "alpha"
+    description: "Backend y API principal"
+    repos:
+      - name: "alpha-backend"
+        repo: "mi-org/alpha-backend"
+        docs_path: "docs"      # ruta dentro del repo donde están los Markdown
+        label: "Backend"       # etiqueta en la navegación
+
+      - name: "alpha-frontend"
+        repo: "mi-org/alpha-frontend"
+        docs_path: "docs"
+        label: "Frontend"
+
+  - name: "Equipo Beta"
+    slug: "beta"
+    description: "Plataforma de datos"
+    repos:
+      - name: "beta-pipeline"
+        repo: "mi-org/beta-pipeline"
+        docs_path: "docs"
+        label: "Pipeline"
+
+      - name: "beta-dashboard"
+        repo: "mi-org/beta-dashboard"
+        docs_path: "docs"
+        label: "Dashboard"
+
+  - name: "Documentación Compartida"
+    slug: "shared"
+    description: "Arquitectura, onboarding y guías generales"
+    repos:
+      - name: "architecture"
+        repo: "mi-org/architecture-docs"
+        docs_path: "docs"
+        label: "Arquitectura"
