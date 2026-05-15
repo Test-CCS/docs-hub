@@ -15,7 +15,7 @@ teams:
         label: "Backend"       # etiqueta en la navegación
 
       - name: "producto1-frontend"
-        repo: "test-ccs/alpha-frontend"
+        repo: "test-ccs/producto1-frontend"
         docs_path: "docs"
         label: "Frontend"
 
