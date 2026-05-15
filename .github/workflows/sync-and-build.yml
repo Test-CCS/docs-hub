@@ -47,6 +47,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
+      - name: Commit synchronized docs to main
+        run: |
+          git config user.name "docs-hub-sync[bot]"
+          git config user.email "docs-hub-sync[bot]@github.com"
+          git add docs/teams/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: sync documentation from team repos" && git push)
+
       - name: Generate mkdocs.yml navigation
         run: python scripts/generate_mkdocs_nav.py
 
